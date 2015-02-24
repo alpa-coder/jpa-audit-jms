@@ -1,6 +1,6 @@
 package be.c4j.springsquad.domain;
 
-import be.c4j.springsquad.infrastructure.Audit;
+import be.c4j.springsquad.infrastructure.audit.Audit;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -10,7 +10,7 @@ import javax.persistence.Id;
 
 @Entity
 @EntityListeners({Audit.class})
-public class Employee extends GenericEntity {
+public class Employee implements GenericEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

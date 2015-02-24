@@ -1,4 +1,4 @@
-package be.c4j.springsquad.infrastructure;
+package be.c4j.springsquad.infrastructure.employee;
 
 import be.c4j.springsquad.domain.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
