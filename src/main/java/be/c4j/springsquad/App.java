@@ -1,6 +1,5 @@
 package be.c4j.springsquad;
 
-import be.c4j.springsquad.config.AppConfig;
 import be.c4j.springsquad.domain.Employee;
 import be.c4j.springsquad.infrastructure.EmployeeRepository;
 import org.springframework.boot.builder.SpringApplicationBuilder;

@@ -1,4 +1,4 @@
-package be.c4j.springsquad.config;
+package be.c4j.springsquad;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
