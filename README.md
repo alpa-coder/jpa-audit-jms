@@ -1,0 +1,1 @@
+# Using JMS Queue to audit JPA entity reads with Spring!  #
