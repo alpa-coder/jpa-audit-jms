@@ -1,6 +1,7 @@
-package be.c4j.springsquad;
+package be.c4j.springsquad.config;
 
 import be.c4j.springsquad.infrastructure.audit.AuditLogger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.listener.SimpleMessageListenerContainer;
@@ -11,10 +12,11 @@ import javax.jms.ConnectionFactory;
 @Configuration
 public class JmsConfig {
 
-    public static final String QUEUE_DESTINATION_NAME = "audit-queue";
+    @Value("${spring.jms.queue.destination}")
+    private String destination;
 
     @Bean
-    MessageListenerAdapter adapter(AuditLogger auditLogger) {
+    public MessageListenerAdapter adapter(AuditLogger auditLogger) {
         MessageListenerAdapter messageListener
                 = new MessageListenerAdapter(auditLogger);
         messageListener.setDefaultListenerMethod("log");
@@ -22,12 +24,12 @@ public class JmsConfig {
     }
 
     @Bean
-    SimpleMessageListenerContainer container(MessageListenerAdapter messageListener,
+    public SimpleMessageListenerContainer container(MessageListenerAdapter messageListener,
                                              ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setMessageListener(messageListener);
         container.setConnectionFactory(connectionFactory);
-        container.setDestinationName(QUEUE_DESTINATION_NAME);
+        container.setDestinationName(destination);
         return container;
     }
 

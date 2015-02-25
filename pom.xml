@@ -4,6 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <groupId>be.c4j.springsquad</groupId>
     <artifactId>jpa-audit-jms</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -49,6 +60,7 @@
     </build>
 
     <properties>
+        <spring.version>4.2.0.BUILD-SNAPSHOT</spring.version>
         <java.version>1.8</java.version>
     </properties>
 

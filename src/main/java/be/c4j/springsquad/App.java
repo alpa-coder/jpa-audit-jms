@@ -10,7 +10,12 @@ import java.util.List;
 
 public class App {
 
-    private static List<String> names = Arrays.asList("Davy", "Jeroen");
+    private static List<String> names = Arrays.asList(
+            "Davy Van Roy",
+            "Stefanie Jacobs",
+            "Amélie Van Roy",
+            "Lucas Van Roy"
+    );
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = createContext(args);
