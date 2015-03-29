@@ -126,7 +126,7 @@ We can see this when starting the application:
 
 
 ```
-#!properties
+#!text
     2015-03-29 20:19:32.981  INFO 21950 --- [           main] o.apache.activemq.broker.BrokerService   : Using Persistence Adapter: MemoryPersistenceAdapter
     2015-03-29 20:19:33.148  INFO 21950 --- [           main] o.apache.activemq.broker.BrokerService   : Apache ActiveMQ 5.10.0 (localhost, ID:mcpro.local-60314-1427653172999-0:1) is starting
     2015-03-29 20:19:33.154  INFO 21950 --- [           main] o.apache.activemq.broker.BrokerService   : Apache ActiveMQ 5.10.0 (localhost, ID:mcpro.local-60314-1427653172999-0:1) started
@@ -249,7 +249,7 @@ public class App {
 And we have success according to the output:
 
 ```
-#!properties
+#!text
 
     2015-03-29 21:44:41.486 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=1, name='Davy Van Roy'}
     2015-03-29 21:44:41.493 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=2, name='Stefanie Jacobs'}
