@@ -18,12 +18,12 @@ A quick overview:
  4. The (spring) event listener "ReadEventListener" picks up this event and publishes it to a JMS Queue
  5. JMS Queue listener handles this JMS Message and logs it to stdout (normally a different application would handle it)
 
-As you may notice step 3 and 4 are actually not necessary, we could immediately let the entity listener publish its event to the JMS queue but I wanted to show the [improved application events in Spring](http://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2). And if we ever need to log a different kind of ReadEvent (ex. a NoSql read event), we simple have to fire the necessary event for it and we do not have to care anymore about or how it needs to be logged. Imagine we ever want to change the way ReadEvents are published (JPA), we only have to change it in one place ([SoC](http://en.wikipedia.org/wiki/Separation_of_concerns)). 
+As you may notice step 3 and 4 are actually not necessary, we could immediately let the entity listener publish its event to the JMS queue but I wanted to show the [improved application events in Spring](http://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2). And if we ever need to log a different kind of ReadEvent (ex. a NoSql read event), we simple have to fire the necessary event for it and we do not have to care anymore about or how it needs to be logged. Imagine we ever want to change the way ReadEvents are published (JMS), we only have to change it in one place ([SoC](http://en.wikipedia.org/wiki/Separation_of_concerns)). 
 
 For this, we will be using **Spring Boot** with the latest Spring version 4.2.0-SNAPSHOT.
 
 ### Basic settings ###
-We will use a basic Spring Boot applicatino for setup. So the standard "spring-boot-starter-parent" is used with some extra dependencies: 
+We will use a basic Spring Boot application for setup. So the standard "spring-boot-starter-parent" is used with some extra dependencies: 
 
  - spring-boot-starter-test (for basic testing)
  - spring-boot-starter-data-jpa (spring data for performing reads)
@@ -148,9 +148,9 @@ I added one configuration myself, the destination:
 
 ### Consume JMS queue ###
 
-    For consuming the JMS queue, we will use a standard JMS listener container provided by Spring. We will create a Message Listener Adapter and log every read to stdout.
-    
-    Configuration for the JMS listener container:
+For consuming the JMS queue, we will use a standard JMS listener container provided by Spring. We will create a Message Listener Adapter and log every read to stdout.
+
+Configuration for the JMS listener container:
 
 ```
 #!java
