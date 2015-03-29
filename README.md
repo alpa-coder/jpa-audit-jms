@@ -36,28 +36,45 @@ The only special feature we will add is that we will use Spring 4.2 as Spring ve
 Full POM is available on [github](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f77618952307ea2a0adefa09bcc576d43/pom.xml?at=master).
 
 Standard configuration:
+
+```
+#!java
     @SpringBootApplication
     public class AppConfig {
     }
+```
+
 
 ### Entity read ###
 We have a basic entity (Employee) which we can annotate with an EntityListener.
 
+
+```
+#!java
     @Entity
     @EntityListeners({Audit.class})
     public class Employee implements Serializable {
     ...
+```
+
 
 Implementation of the entity listener Audit:
 
+```
+#!java
     public class Audit {
         @PostLoad
         public void auditUsage(Object entity) {
             ContextHelper.getPublisher().publishEvent(new ReadEvent(entity));
         }
     }
+```
+
 We will publish a "ReadEvent" object that will carry information about the entity being read:
 
+
+```
+#!java
     public class ReadEvent {
         private Object entity;
     
@@ -69,6 +86,8 @@ We will publish a "ReadEvent" object that will carry information about the entit
             return entity;
         }
     }
+```
+
 
 Because this Audit class is not a Spring component, a small [ContextHelper](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f77618952307ea2a0adefa09bcc576d43/src/main/java/be/c4j/springsquad/infrastructure/ContextHelper.java?at=master) class was created to get access to some Spring beans (like the application event publisher).
 
@@ -78,6 +97,9 @@ In the previous chapter we got the publisher from the ContextHelper class. This 
 ### Consume read event ###
 Now we can use Spring's 4.2 improved application event listeners:
 
+
+```
+#!java
     @Component
     public class ReadEventListener {
         @Autowired
@@ -91,6 +113,8 @@ Now we can use Spring's 4.2 improved application event listeners:
             jmsTemplate.convertAndSend(destination, readEvent.getEntity());
         }
     }
+```
+
 
 We have one method here "onRead" with our "ReadEvent" object as parameter. We simply need to annotate it with @EventListener and Spring will listen to all application events and when a "ReadEvent" is triggered, this method is executed.
 This way of event handling is new in Spring 4.2 (that's why I am using a snapshot repository). If you need an older version of Spring, you can still use the standard [ApplicationListener](http://docs.spring.io/autorepo/docs/spring/current/javadoc-api/org/springframework/context/ApplicationListener.html).
@@ -100,11 +124,16 @@ This way of event handling is new in Spring 4.2 (that's why I am using a snapsho
 In the method of the entity listener, we use a [JmsTemplate](http://docs.spring.io/spring-framework/docs/2.5.x/api/org/springframework/jms/core/JmsTemplate.html) to send our object being read to a JMS Queue. You may notice that we didn't configure anything for this, thank you Spring Boot! Spring Boot notices that I have JMS on the classpath and ActiveMQ, it will start an in memory active MQ and create a JMS template bean which you can autowire. Pretty sweet that we will be having a running application without any confiugration. 
 We can see this when starting the application:
 
+
+```
+#!
     2015-03-29 20:19:32.981  INFO 21950 --- [           main] o.apache.activemq.broker.BrokerService   : Using Persistence Adapter: MemoryPersistenceAdapter
         2015-03-29 20:19:33.148  INFO 21950 --- [           main] o.apache.activemq.broker.BrokerService   : Apache ActiveMQ 5.10.0 (localhost, ID:mcpro.local-60314-1427653172999-0:1) is starting
         2015-03-29 20:19:33.154  INFO 21950 --- [           main] o.apache.activemq.broker.BrokerService   : Apache ActiveMQ 5.10.0 (localhost, ID:mcpro.local-60314-1427653172999-0:1) started
         2015-03-29 20:19:33.154  INFO 21950 --- [           main] o.apache.activemq.broker.BrokerService   : For help or more information please see: http://activemq.apache.org
         2015-03-29 20:19:33.188  INFO 21950 --- [           main] o.a.activemq.broker.TransportConnector   : Connector vm://localhost started
+```
+
 
 I added one configuration myself, the destination:
 
@@ -117,6 +146,10 @@ I added one configuration myself, the destination:
     For consuming the JMS queue, we will use a standard JMS listener container provided by Spring. We will create a Message Listener Adapter and log every read to stdout.
     
     Configuration for the JMS listener container:
+
+```
+#!java
+
     @Configuration
     public class JmsConfig {
         @Value("${spring.jms.queue.destination}")
@@ -140,8 +173,14 @@ I added one configuration myself, the destination:
             return container;
         }
     }
+```
+
 
 And finally the implementation of the object responsible for the actual logging:
+
+
+```
+#!java
 
     @Component
     public class AuditLogger {
@@ -152,6 +191,8 @@ And finally the implementation of the object responsible for the actual logging:
             log.debug(entity.toString());
         }
     }
+```
+
 Logger is configured by spring boot, you can simply change the log level in your application.properties:
 
     logging.level.be.c4j.springsquad=DEBUG
@@ -159,7 +200,11 @@ Logger is configured by spring boot, you can simply change the log level in your
     
 ### Run application ###
 Since we are using Spring Boot, we can simply start the application, create some users and read them:
-    public class App {
+    
+```
+#!java
+
+public class App {
     
         private static List<String> names = Arrays.asList(
                 "Davy Van Roy",
@@ -198,13 +243,21 @@ Since we are using Spring Boot, we can simply start the application, create some
                     .forEach(repository::findByName);
         }
     }
+```
+
 
 And we have success according to the output:
+
+```
+#!
+
     2015-03-29 21:44:41.486 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=1, name='Davy Van Roy'}
     2015-03-29 21:44:41.493 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=2, name='Stefanie Jacobs'}
     2015-03-29 21:44:41.498 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=3, name='Amélie Van Roy'}
     2015-03-29 21:44:41.504 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=4, name='Lucas Van Roy'}
      
+
+```
 
 ## Conclusion ##
 We were able to use standard functionality from Spring to solve the problem, and it was pretty straight forward as well. The pieces of the puzzle fit nicely together. Using Spring Boot we were able to set-up the environment in a matter of minutes which is pretty sweet. 
@@ -215,4 +268,3 @@ If you really want to know more details, please take a look on the [source code]
 
  - [Using JMS Queue to audit JPA entity reads](http://c4j.be/blog/using-jms-queue-audit-jpa-entity-reads) by Rudy De Busscher
  - [Better application events in Spring Framework 4.2](http://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2)
-
