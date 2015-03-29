@@ -35,6 +35,11 @@ The only special feature we will add is that we will use Spring 4.2 as Spring ve
 
 Full POM is available on [github](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f77618952307ea2a0adefa09bcc576d43/pom.xml?at=master).
 
+Standard configuration:
+    @SpringBootApplication
+    public class AppConfig {
+    }
+
 ### Entity read ###
 We have a basic entity (Employee) which we can annotate with an EntityListener.
 
@@ -150,6 +155,56 @@ And finally the implementation of the object responsible for the actual logging:
 Logger is configured by spring boot, you can simply change the log level in your application.properties:
 
     logging.level.be.c4j.springsquad=DEBUG
+    
+    
+### Run application ###
+Since we are using Spring Boot, we can simply start the application, create some users and read them:
+    public class App {
+    
+        private static List<String> names = Arrays.asList(
+                "Davy Van Roy",
+                "Stefanie Jacobs",
+                "Amélie Van Roy",
+                "Lucas Van Roy"
+        );
+    
+        public static void main(String[] args) {
+            ConfigurableApplicationContext context = createContext(args);
+            auditUsers(context);
+        }
+    
+        private static ConfigurableApplicationContext createContext(String[] args) {
+            ConfigurableApplicationContext context = new SpringApplicationBuilder()
+                    .sources(AppConfig.class)
+                    .run(args);
+            context.registerShutdownHook();
+            return context;
+        }
+    
+        private static void auditUsers(ConfigurableApplicationContext context) {
+            EmployeeRepository repository = context.getBean(EmployeeRepository.class);
+            createUsers(repository);
+            readUsers(repository);
+        }
+    
+        private static void createUsers(EmployeeRepository repository) {
+            names.stream()
+                    .map(Employee::new)
+                    .forEach(repository::save);
+        }
+    
+        private static void readUsers(EmployeeRepository repository) {
+            names.stream()
+                    .forEach(repository::findByName);
+        }
+    }
+
+And we have success according to the output:
+    2015-03-29 21:44:41.486 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=1, name='Davy Van Roy'}
+    2015-03-29 21:44:41.493 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=2, name='Stefanie Jacobs'}
+    2015-03-29 21:44:41.498 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=3, name='Amélie Van Roy'}
+    2015-03-29 21:44:41.504 DEBUG 22169 --- [ Session Task-1] b.c.s.infrastructure.audit.AuditLogger   : Employee{id=4, name='Lucas Van Roy'}
+     
 
 ## Conclusion ##
 We were able to use standard functionality from Spring to solve the problem, and it was pretty straight forward as well. The pieces of the puzzle fit nicely together. Using Spring Boot we were able to set-up the environment in a matter of minutes which is pretty sweet. 
