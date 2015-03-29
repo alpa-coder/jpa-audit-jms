@@ -136,10 +136,14 @@ We can see this when starting the application:
 
 
 I added one configuration myself, the destination:
+
 ```
+
 #!properties
     spring.jms.queue.destination=audit-queue
+    
 ```
+
 **At this point, every entity being read by JPA, will be sent to a JMS queue.**
 
 ### Consume JMS queue ###
@@ -195,10 +199,13 @@ And finally the implementation of the object responsible for the actual logging:
 ```
 
 Logger is configured by spring boot, you can simply change the log level in your application.properties:
+
 ```
+
 #!properties
     logging.level.be.c4j.springsquad=DEBUG
- ```
+    
+```
     
     
 ### Run application ###
