@@ -17,7 +17,7 @@ public class ReadEventListener {
 
     @EventListener
     public void onRead(ReadEvent readEvent) {
-        jmsTemplate.convertAndSend(destination, readEvent.getGenericEntity());
+        jmsTemplate.convertAndSend(destination, readEvent.getEntity());
     }
 
 }

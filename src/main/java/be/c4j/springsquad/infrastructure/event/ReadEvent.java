@@ -1,15 +1,13 @@
 package be.c4j.springsquad.infrastructure.event;
 
-import be.c4j.springsquad.domain.GenericEntity;
-
 public class ReadEvent {
-    private GenericEntity genericEntity;
+    private Object entity;
 
-    public ReadEvent(GenericEntity genericEntity) {
-        this.genericEntity = genericEntity;
+    public ReadEvent(Object entity) {
+        this.entity = entity;
     }
 
-    public GenericEntity getGenericEntity() {
-        return genericEntity;
+    public Object getEntity() {
+        return entity;
     }
 }

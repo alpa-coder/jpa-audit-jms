@@ -11,7 +11,6 @@ import javax.jms.ConnectionFactory;
 
 @Configuration
 public class JmsConfig {
-
     @Value("${spring.jms.queue.destination}")
     private String destination;
 
@@ -32,5 +31,4 @@ public class JmsConfig {
         container.setDestinationName(destination);
         return container;
     }
-
 }
