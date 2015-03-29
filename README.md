@@ -270,7 +270,7 @@ And we have success according to the output:
 ```
 
 ## Conclusion ##
-We were able to use standard functionality from Spring to solve the problem, and it was pretty straight forward as well. The pieces of the puzzle fit nicely together. Using Spring Boot we were able to set-up the environment in a matter of minutes which is pretty sweet. 
+We were able to use standard functionality from Spring to solve the problem, and it was pretty straight forward as well. The pieces of the puzzle fit nicely together. Using Spring Boot we were able to set up the environment in a matter of minutes, which is pretty sweet. 
 
 If you really want to know more details, please take a look on the [source code](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f7761?at=master). Only parts of the code were shown in this blogpost to avoid clutter (but actually, there is not a lot of code).
 
