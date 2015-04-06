@@ -70,7 +70,7 @@ Implementation of the entity listener Audit:
     public class Audit {
         @PostLoad
         public void auditUsage(Object entity) {
-            ContextHelper.getPublisher().publishEvent(new ReadEvent(entity));
+            
         }
     }
 ```
@@ -98,6 +98,16 @@ Because this Audit class is not a Spring component, a small [ContextHelper](http
 
 ### Publish read event ###
 In the previous chapter we got the publisher from the ContextHelper class. This is the Spring [ApplicationEventPublisher](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/ApplicationEventPublisher.html). So we will use basic event handling from Spring (which might not be known by a lot of people).
+
+```
+#!java
+    public class Audit {
+        @PostLoad
+        public void auditUsage(Object entity) {
+            ContextHelper.getPublisher().publishEvent(new ReadEvent(entity));
+        }
+    }
+```
 
 ### Consume read event ###
 Now we can use Spring's 4.2 improved application event listeners:
