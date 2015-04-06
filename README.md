@@ -4,19 +4,24 @@ Recently a colleague of mine (Rudy De Busscher) posted an [interesting blog item
 ## Problem description ##
 We have a quite simple problem: every time a JPA entity read occurs, this "read" is published to a JMS Queue. 
 
- 1. An entity Read happens
- 2. Push read message on JMS Queue
- 3. Read JMS message and output to stdout
+ 1.  An entity Read happens
+ 2.  Push read message on JMS Queue
+ 3.  Read JMS message and output to stdout
+ 
+ ![problem description](https://davyvanroy.be/wp-content/uploads/2015/04/jms_audit_problem.png)
 
 ## Solution ##
 There are of course multiple solutions to this problem. In this solution, we will still be using the EntityListener that was shown in the blogpost of Rudy De Busscher. This entity listener will publish a read event. An event listener will pick up the event and publish it to a JMS Queue using a JMS Template. A JMS Message listener will pick up the message and log it to stdout.
 
 A quick overview:
- 1. An entity read happens
- 2. This entity read triggers an [EntityListener](https://docs.jboss.org/hibernate/entitymanager/3.5/reference/en/html/listeners.html)
- 3. This EntityListener (Audit) publishes a "ReadEvent" using spring events
- 4. The (spring) event listener "ReadEventListener" picks up this event and publishes it to a JMS Queue
- 5. JMS Queue listener handles this JMS Message and logs it to stdout (normally a different application would handle it)
+
+ 1.  An entity read happens
+ 2.  This entity read triggers an [EntityListener](https://docs.jboss.org/hibernate/entitymanager/3.5/reference/en/html/listeners.html)
+ 3.  This EntityListener (Audit) publishes a "ReadEvent" using spring events
+ 4.  The (spring) event listener "ReadEventListener" picks up this event and publishes it to a JMS Queue
+ 5.  JMS Queue listener handles this JMS Message and logs it to stdout (normally a different application would handle it)
+ 
+  ![solution description](https://davyvanroy.be/wp-content/uploads/2015/04/jpa_audit_solution.png)
 
 As you may notice step 3 and 4 are actually not necessary, we could immediately let the entity listener publish its event to the JMS queue but I wanted to show the [improved application events in Spring](http://spring.io/blog/2015/02/11/better-application-events-in-spring-framework-4-2). And if we ever need to log a different kind of ReadEvent (ex. a NoSql read event), we simple have to fire the necessary event for it and we do not have to care anymore about or how it needs to be logged. Imagine we ever want to change the way ReadEvents are published (JMS), we only have to change it in one place ([SoC](http://en.wikipedia.org/wiki/Separation_of_concerns)). 
 
@@ -272,7 +277,7 @@ And we have success according to the output:
 ## Conclusion ##
 We were able to use standard functionality from Spring to solve the problem, and it was pretty straight forward as well. The pieces of the puzzle fit nicely together. Using Spring Boot we were able to set up the environment in a matter of minutes, which is pretty sweet. 
 
-If you really want to know more details, please take a look on the [source code](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f7761?at=master). Only parts of the code were shown in this blogpost to avoid clutter (but actually, there is not a lot of code).
+If you really want to know more details, please take a look at the [source code](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f7761?at=master). Only parts of the code were shown in this blogpost to avoid clutter (but actually, there is not a lot of code).
 
 ## References ##
 
