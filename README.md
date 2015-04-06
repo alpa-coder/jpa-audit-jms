@@ -75,6 +75,13 @@ Implementation of the entity listener Audit:
     }
 ```
 
+
+
+
+
+
+### Publish read event ###
+
 We will publish a "ReadEvent" object that will carry information about the entity being read:
 
 
@@ -92,12 +99,8 @@ We will publish a "ReadEvent" object that will carry information about the entit
         }
     }
 ```
+For publishing the read event, we will use Spring's application events, ie. [ApplicationEventPublisher](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/ApplicationEventPublisher.html). So we will use basic event handling from Spring (which might not be known by a lot of people.
 
-
-Because this Audit class is not a Spring component, a small [ContextHelper](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f77618952307ea2a0adefa09bcc576d43/src/main/java/be/c4j/springsquad/infrastructure/ContextHelper.java?at=master) class was created to get access to some Spring beans (like the application event publisher).
-
-### Publish read event ###
-In the previous chapter we got the publisher from the ContextHelper class. This is the Spring [ApplicationEventPublisher](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/ApplicationEventPublisher.html). So we will use basic event handling from Spring (which might not be known by a lot of people).
 
 ```
 #!java
@@ -108,6 +111,8 @@ In the previous chapter we got the publisher from the ContextHelper class. This 
         }
     }
 ```
+
+Because this Audit class is not a Spring component, a small [ContextHelper](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f77618952307ea2a0adefa09bcc576d43/src/main/java/be/c4j/springsquad/infrastructure/ContextHelper.java?at=master) class was created to get access to some Spring beans (like the application event publisher).
 
 ### Consume read event ###
 Now we can use Spring's 4.2 improved application event listeners:
