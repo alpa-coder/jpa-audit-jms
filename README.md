@@ -38,7 +38,7 @@ We will use a basic Spring Boot application for setup. So the standard "spring-b
 
 The only special feature we will add is that we will use Spring 4.2 as Spring version. For this we add the spring-snapshots repository and set the spring.version maven property to: 4.2.0-SNAPSHOT.
 
-Full POM is available on [github](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f77618952307ea2a0adefa09bcc576d43/pom.xml?at=master).
+Full POM is available on [github](https://github.com/Spring-Squad/jpa-audit-jms/blob/master/pom.xml).
 
 Standard configuration:
 
@@ -107,7 +107,7 @@ For publishing the read event, we will use Spring's application events, ie. [App
     }
 
 
-Because this Audit class is not a Spring component, a small [ContextHelper](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f77618952307ea2a0adefa09bcc576d43/src/main/java/be/c4j/springsquad/infrastructure/ContextHelper.java?at=master) class was created to get access to some Spring beans (like the application event publisher).
+Because this Audit class is not a Spring component, a small [ContextHelper](https://github.com/Spring-Squad/jpa-audit-jms/blob/master/src/main/java/be/c4j/springsquad/infrastructure/ContextHelper.java) class was created to get access to some Spring beans (like the application event publisher).
 
 ### Consume read event ###
 Now we can use Spring's 4.2 improved application event listeners:
@@ -283,7 +283,7 @@ And we have success according to the output:
 ## Conclusion ##
 We were able to use standard functionality from Spring to solve the problem, and it was pretty straight forward as well. The pieces of the puzzle fit nicely together. Using Spring Boot we were able to set up the environment in a matter of minutes, which is pretty sweet. 
 
-If you really want to know more details, please take a look at the [source code](https://bitbucket.org/spring-squad/jpa-audit-jms/src/f92cc87f7761?at=master). Only parts of the code were shown in this blogpost to avoid clutter (but actually, there is not a lot of code).
+If you really want to know more details, please take a look at the [source code](https://github.com/Spring-Squad/jpa-audit-jms). Only parts of the code were shown in this blogpost to avoid clutter (but actually, there is not a lot of code).
 
 ## References ##
 
